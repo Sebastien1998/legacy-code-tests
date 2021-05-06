@@ -8,7 +8,7 @@ import org.craftedsw.tripservicekata.trip.Trip;
 public class User {
 
 	private List<Trip> trips = new ArrayList<Trip>();
-	private List<User> friends = new ArrayList<User>();
+	public List<User> friends = new ArrayList<User>();
 	
 	public List<User> getFriends() {
 		return friends;

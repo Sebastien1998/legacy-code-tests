@@ -13,20 +13,37 @@ public class TripService {
 		List<Trip> tripList = new ArrayList<Trip>();
 		User loggedUser = UserSession.getInstance().getLoggedUser();
 		boolean isFriend = false;
+		return getTrips(user, tripList, loggedUser, isFriend);
+	}
+
+	private List<Trip> getTrips(User user, List<Trip> tripList, User loggedUser, boolean isFriend) {
 		if (loggedUser != null) {
-			for (User friend : user.getFriends()) {
-				if (friend.equals(loggedUser)) {
-					isFriend = true;
-					break;
-				}
-			}
-			if (isFriend) {
-				tripList = TripDAO.findTripsByUser(user);
-			}
+			isFriend = isFriend(user, loggedUser, isFriend);
+			tripList = getTrips(user, tripList, isFriend);
 			return tripList;
 		} else {
 			throw new UserNotLoggedInException();
 		}
 	}
-	
+
+
+	private boolean isFriend(User user, User loggedUser, boolean isFriend) {
+		for (User friend : user.getFriends()) {
+			if (friend.equals(loggedUser)) {
+				isFriend = true;
+				break;
+			}
+		}
+		return isFriend;
+	}
+
+
+	private List<Trip> getTrips(User user, List<Trip> tripList, boolean isFriend) {
+		if (isFriend) {
+			tripList = TripDAO.findTripsByUser(user);
+		}
+		return tripList;
+	}
+
+
 }
